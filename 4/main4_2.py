@@ -1,4 +1,5 @@
 with open('input.txt') as f:
+
     input = f.readlines()
     rounds = input.pop(0).split(',')
     del input[0]
@@ -66,6 +67,5 @@ for i in rounds:
     if len(boards) == 0:
         break
     break_value = 0
-
 
 print(result)
