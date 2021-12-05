@@ -49,16 +49,16 @@ with open('input.txt') as f:
         if len(input_co2) == 1:
             break
 
-result_o = [m for m in input_oxygen[0] if m == '0' or m == '1']
+result_o = [int(m) for m in input_oxygen[0] if m == '0' or m == '1']
 result_o_dec = 0
 
-result_co2 = [m for m in input_co2[0] if m == '0' or m == '1']
+result_co2 = [int(m) for m in input_co2[0] if m == '0' or m == '1']
 result_co2_dec = 0
 
 for i, value in enumerate(result_o):
-    result_o_dec += (2 ** ((len(result_o) - 1) - i)) * int(value)
+    result_o_dec += (2 ** ((len(result_o) - 1) - i)) * value
 
 for i, value in enumerate(result_co2):
-    result_co2_dec += (2 ** ((len(result_co2) - 1) - i)) * int(value)
+    result_co2_dec += (2 ** ((len(result_co2) - 1) - i)) * value
 
 print(result_co2_dec * result_o_dec)

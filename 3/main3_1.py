@@ -3,18 +3,15 @@ with open('input.txt') as f:
     epsilon = []
     input = f.readlines()
 
-    for i in range(0, len(input[0]) - 1):
+    for i in range(len(input[0]) - 1):
 
         count_1 = 0
-        count_0 = 0
 
         for j in input:
             if j[i] == '1':
                 count_1 += 1
-            elif j[i] == '0':
-                count_0 += 1
 
-        if count_0 > count_1:
+        if (len(input)/2) > count_1:
             gamma.append(0)
             epsilon.append(1)
         else:
