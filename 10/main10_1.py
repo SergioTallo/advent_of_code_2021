@@ -2,6 +2,7 @@ with open('input.txt') as f:
     display = [i.replace('\n', '') for i in f.readlines()]
 
 syntax_dict = {'{': '}', '[': ']', '<': '>', '(': ')'}
+points_dict = {'}': 1197, ']': 57, '>': 25137, ')': 3, '0': 0}
 
 
 def checker_syntax(display):
@@ -22,9 +23,9 @@ def checker_syntax(display):
 
 list_illegal = [checker_syntax(i) for i in display]
 
-points_dict = {'}': 1197, ']': 57, '>': 25137, ')': 3, '0': 0}
-
 points = 0
+
 for i in list_illegal:
     points += points_dict[i]
+
 print(points)
