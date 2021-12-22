@@ -127,4 +127,4 @@ total_values = []
 for i in numbers:
     total_values.append(decode_packets(i))
 
-print(total_values)
+print(sum(total_values))

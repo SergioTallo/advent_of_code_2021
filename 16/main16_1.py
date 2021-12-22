@@ -1,3 +1,5 @@
+# Parse the Hexadecimal code store in the file to a list of strings containing the same hexadecimal code
+# but translated into binary code
 def parse_file(file_name: str) -> list:
     with open(file_name) as f:
         rows = [i.replace('\n', '') for i in f.readlines()]
@@ -5,7 +7,8 @@ def parse_file(file_name: str) -> list:
 
         for i in rows:
             number = [bin(int(j, base=16)) for j in i]
-            number_parsed = []
+            binary_code = ''
+
             for j in number:
                 j = j.replace('0b', '')
                 if len(j) == 3:
@@ -14,30 +17,26 @@ def parse_file(file_name: str) -> list:
                     j = '00' + j
                 elif len(j) == 1:
                     j = '000' + j
-                number_parsed.append(j)
-            final_number = ''
-            for k in number_parsed:
-                final_number += k
 
-            numbers.append(final_number)
+                binary_code = binary_code + j
+
+            numbers.append(binary_code)
 
     return numbers
 
 
 def decode_packets(number: str):
     position = 0
-    values = []
     packet_version_list = []
 
     while position < len(number) - 1:
-        packet_version, value, position = packet(number=number, position=position)
+        packet_version, position = packet(number=number, position=position)
         packet_version_list.append(packet_version)
-        values.append(value)
 
         while position % 4 != 0 and position < len(number) - 1:
             position += 1
 
-    return sum(packet_version_list), sum(values)
+    return sum(packet_version_list)
 
 
 def packet(number: str, position: int) -> tuple:
@@ -70,13 +69,11 @@ def packet(number: str, position: int) -> tuple:
 
             packet_versions = [packet_version]
 
-            literal_values = []
             while position < position_finished:
-                packet_version_ret, value, position = packet(number=number, position=position)
+                packet_version_ret, position = packet(number=number, position=position)
                 packet_versions.append(packet_version_ret)
-                literal_values.append(value)
 
-            return sum(packet_versions), sum(literal_values), position
+            return sum(packet_versions), position
 
         else:
             number_subpackets = ''
@@ -86,47 +83,37 @@ def packet(number: str, position: int) -> tuple:
 
             number_subpackets = int(number_subpackets, 2)
 
-            literal_values = []
-
             packet_versions = [packet_version]
 
             for i in range(0, number_subpackets):
-                packet_version_ret, value, position = packet(number=number, position=position)
+                packet_version_ret, position = packet(number=number, position=position)
                 packet_versions.append(packet_version_ret)
-                literal_values.append(value)
 
-            return sum(packet_versions), sum(literal_values), position
+            return sum(packet_versions), position
 
     else:
         return literal_value(number=number, position=position, packet_version=packet_version)
 
 
 def literal_value(number: str, position: int, packet_version: int) -> tuple:
-    stop = 0
-    literal_value = ''
-
-    while stop == 0:
+    while True:
         part_literal_value = ''
         for i in range(position, position + 5):
             part_literal_value += number[i]
 
         position += 5
         if part_literal_value[0] == '0':
-            stop = 1
+            break
 
-        literal_value += part_literal_value[1:]
-
-    literal_value_int = int(literal_value, 2)
-
-    return packet_version, literal_value_int, position
+    return packet_version, position
 
 
 numbers = parse_file(file_name='input.txt')
 
 total_values = []
 
-for i in numbers:
-    total_values.append(decode_packets(i))
+for n in numbers:
+    total_values.append(decode_packets(n))
 
-print(total_values)
+print(sum(total_values))
 
