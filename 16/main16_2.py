@@ -1,6 +1,8 @@
 import math
 
 
+# Parse the Hexadecimal code store in the file to a list of strings containing the same hexadecimal code
+# but translated into binary code
 def parse_file(file_name: str) -> list:
     with open(file_name) as f:
         rows = [i.replace('\n', '') for i in f.readlines()]
@@ -8,7 +10,8 @@ def parse_file(file_name: str) -> list:
 
         for i in rows:
             number = [bin(int(j, base=16)) for j in i]
-            number_parsed = []
+            binary_code = ''
+
             for j in number:
                 j = j.replace('0b', '')
                 if len(j) == 3:
@@ -17,12 +20,10 @@ def parse_file(file_name: str) -> list:
                     j = '00' + j
                 elif len(j) == 1:
                     j = '000' + j
-                number_parsed.append(j)
-            final_number = ''
-            for k in number_parsed:
-                final_number += k
 
-            numbers.append(final_number)
+                binary_code = binary_code + j
+
+            numbers.append(binary_code)
 
     return numbers
 
@@ -124,7 +125,7 @@ numbers = parse_file(file_name='input.txt')
 
 total_values = []
 
-for i in numbers:
-    total_values.append(decode_packets(i))
+for n in numbers:
+    total_values.append(decode_packets(n))
 
 print(sum(total_values))
